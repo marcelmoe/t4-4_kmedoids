@@ -22,21 +22,24 @@ def upload_data():
         if data_files[file].name.endswith("red.csv"):
             df_red_wine_test = pd.read_csv(data_files[file], delimiter=";")
             df_red_wine = df_red_wine_test.drop(["quality"], axis=1)
-        elif data_files[file].name.endswith("white.csv"):
-            df_white_wine_test = pd.read_csv(data_files[file], delimiter=";")
-            df_white_wine_test[["alcohol"]].replace(". ","", inplace=True)
-            df_white_wine = df_white_wine_test.drop(["quality"], axis=1)
+
         elif data_files[file].name.endswith("wine.csv"):
             headers = ["Class","Alcohol", "Malic acid", "Ash", "Alcalinity of ash", "Magnesium",
                        "Total phenols", "Flavanoids", "Nonflavanoid phenols", "Proanthocyanins",
                        "Color intensity", "Hue", "OD280/OD315 of diluted wines", "Proline"]
             df_wine_test = pd.read_csv(data_files[file], header=None, names=headers)
             df_wine = df_wine_test.drop(["Class"], axis=1)
+
+        elif data_files[file].name.endswith("shuffled.csv"):
+            df_beer_test = pd.read_csv(data_files[file])
+            # df_beer_test[["alcohol"]].replace(". ", "", inplace=True)
+            # df_beer = df_beer.drop(["quality"], axis=1)
+
         else:
             st.write("ERROR: Please submit correct files.")
 
-    st.write(df_red_wine_test.head())
-    return df_red_wine, df_white_wine, df_wine, df_red_wine_test,df_white_wine_test, df_wine_test
+    st.write(df_beer_test.head())
+    # return df_red_wine, df_beer, df_wine, df_red_wine_test,df_beer_test, df_wine_test
 
 def kmedoids():
     kmedoids = KMedoids()
