@@ -4,7 +4,6 @@ This module deploys the algorithmns using streamlit
 import pandas as pd
 import streamlit as st
 from sklearn_extra.cluster import KMedoids
-import numpy as np
 
 
 def upload_data():
@@ -45,16 +44,18 @@ def kmedoids():
     kmedoids = KMedoids()
     pass
 
+
 def dropdown():
     with st.sidebar.beta_expander("Data Processing"):
         distance = ["Euklid", "Jaccard", "Mahalanobis"]
-        wine_data = ["Red Wine Quality", "Wine Classification", "White Wine Quality"]
+        data_sets = ["Red Wine Quality", "Wine Classification", "Beer reviews"]
         algo_method = ["PAM", "Alternate"]
         st.selectbox("What distance do you want to use", distance)
-        st.selectbox("What dataset do you want to use", wine_data)
+        st.selectbox("What dataset do you want to use", data_sets)
         st.selectbox("What method do you want to use", algo_method)
     with st.sidebar.beta_expander("Data Visualization"):
         pass
+
 
 def main():
     st.title("T4-4: Clustering wine data using K-Medoids algorithm")
@@ -66,6 +67,7 @@ def main():
 
     except UnboundLocalError:
         st.warning("Upload data files")
+
 
 if __name__ == "__main__":
     main()
