@@ -4,8 +4,9 @@ This module deploys the algorithmns using streamlit
 import pandas as pd
 import streamlit as st
 from sklearn_extra.cluster import KMedoids
+from pandas import DataFrame
 
-
+@st.cache(suppress_st_warning=True)
 def upload_data():
     """
     takes raw data and
@@ -34,13 +35,36 @@ def upload_data():
 
         elif data_files[file].name.endswith("shuffled.csv"):
             df_beer_test = pd.read_csv(data_files[file])
+            df_beer_test.dropna(axis=0, inplace=True)
+            df_beer_test.reset_index(inplace=True)
+
             df_unique = df_beer_test["beer_style"].unique()
-            # df_beer = df_beer.drop(["quality"], axis=1)
+            list = df_beer_test["beer_style"].tolist()
+
+            uniques = pd.Series(df_unique)
+            new_list = pd.Series(list)
+
+            dict_map = {}
+            keys = uniques
+            values = range(0,104)
+            for value in values:
+                dict_map[value] = keys[value]
+
+            swapped_dict = {value:key for key, value in dict_map.items()}
+
+            final_list = new_list.map(swapped_dict)
+
+            df_class = DataFrame(final_list, columns=["Class"])
+
+            df_merged = pd.concat([df_beer_test, df_class], axis=1)
 
         else:
             st.write("ERROR: Please submit correct files.")
 
-    st.write(df_unique.head())
+    # st.write(df_class.head())
+    st.write(df_merged.head())
+    # st.write(final_list)
+    # st.write(len(df_unique))
     # return df_red_wine, df_beer, df_wine, df_red_wine_test,df_beer_test, df_wine_test
 
 def kmedoids():
@@ -65,7 +89,7 @@ def main():
 
     # Prevent error warning when no data files have been uploaded yet
     try:
-        df_red_wine, df_white_wine, df_wine, f_red_wine_test, df_white_wine_test, df_wine_test = upload_data()
+        upload_data()
         dropdown()
 
     except UnboundLocalError:
