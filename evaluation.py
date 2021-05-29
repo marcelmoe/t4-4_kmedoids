@@ -92,7 +92,7 @@ def silhouette_coefficient(df, cluster_count):
     # Iterate over all clusters
     for i in range(1, cluster_count+1):
         # sub dataframe containing observations assigned to cluster i
-        cluster_i = df.loc[df[df.columns[0]] == i]
+        cluster_i = (df.loc[df[df.columns[0]] == i]).drop([df.columns[0]], axis=1)
 
         # Convert to numpy array (for computational reasons)
         cluster_i_np = cluster_i.to_numpy()
@@ -105,7 +105,7 @@ def silhouette_coefficient(df, cluster_count):
 
             # First, compute the cohesion of observation j
             # Compute the sum of all distance from point j to points of cluster_i
-            dist = ((cluster_i_np - cluster_i_np[j])**2).sum()
+            dist = np.linalg.norm(cluster_i_np - cluster_i_np[j])
 
             # Take the average
             avg_dist = dist/(len(cluster_i_np)-1)
@@ -125,16 +125,14 @@ def silhouette_coefficient(df, cluster_count):
                     continue
 
                 # Cluster_k
-                cluster_k = df.loc[df[df.columns[0]] == k]
+                cluster_k = (df.loc[df[df.columns[0]] == k]).drop(df.columns[0], axis=1)
                 # Convert to numpy array
                 cluster_k_np = cluster_k.to_numpy()
 
                 # Compute the sum of all distance from point j of cluster i to  points of cluster_k
-                dist = ((cluster_k_np - cluster_i_np[j])**2).sum()
-
+                dist = np.linalg.norm(cluster_k_np - cluster_i_np[j])
                 # Take the average
                 avg_dist = dist / len(cluster_k_np)
-
                 # Add to list
                 avg_cluster_dist = avg_cluster_dist + [avg_dist]
 
