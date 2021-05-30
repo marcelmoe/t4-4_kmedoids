@@ -83,14 +83,15 @@ def silhouette_coefficient(df, cluster_count):
     :param df: Pandas dataframe. It is assumed that df's first column contains the observations cluster-label. It
     is further assumed that the class labels range from 0 to (cluster_count - 1)
     :param cluster_count: Number of clusters/classes.
-    :return: Numpy array containing the silhouette coefficients for all clusters of df.
+    :return: It returns a tuple where the first entry is a numpy array containing the silhouette coefficients for all
+     clusters of df and the second entry the over all silhouette coefficient for all observations
     """
 
     result = []
     all_s = []
 
     # Iterate over all clusters
-    for i in range(1, cluster_count+1):
+    for i in range(0, cluster_count):
         # sub dataframe containing observations assigned to cluster i
         cluster_i = (df.loc[df[df.columns[0]] == i]).drop([df.columns[0]], axis=1)
 
@@ -105,7 +106,7 @@ def silhouette_coefficient(df, cluster_count):
 
             # First, compute the cohesion of observation j
             # Compute the sum of all distance from point j to points of cluster_i
-            dist = np.linalg.norm(cluster_i_np - cluster_i_np[j])
+            dist = (np.linalg.norm(cluster_i_np - cluster_i_np[j], axis=1)).sum()
 
             # Take the average
             avg_dist = dist/(len(cluster_i_np)-1)
@@ -118,7 +119,7 @@ def silhouette_coefficient(df, cluster_count):
             avg_cluster_dist = []
 
             # Iterate over all other clusters
-            for k in range(1, cluster_count+1):
+            for k in range(0, cluster_count):
 
                 # Continue if cluster_i and cluster_k are the same
                 if i == k:
@@ -130,7 +131,7 @@ def silhouette_coefficient(df, cluster_count):
                 cluster_k_np = cluster_k.to_numpy()
 
                 # Compute the sum of all distance from point j of cluster i to  points of cluster_k
-                dist = np.linalg.norm(cluster_k_np - cluster_i_np[j])
+                dist = (np.linalg.norm(cluster_k_np - cluster_i_np[j], axis=1)).sum()
                 # Take the average
                 avg_dist = dist / len(cluster_k_np)
                 # Add to list
