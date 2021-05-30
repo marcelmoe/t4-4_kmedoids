@@ -34,12 +34,12 @@ def upload_data():
             df_wine = df_wine_test.drop(["Class"], axis=1)
 
         elif data_files[file].name.endswith("shuffled.csv"):
-            df_beer_test = pd.read_csv(data_files[file])
-            df_beer_test.dropna(axis=0, inplace=True)
-            df_beer_test.reset_index(inplace=True)
+            df_beer = pd.read_csv(data_files[file])
+            df_beer.dropna(axis=0, inplace=True)
+            df_beer.reset_index(inplace=True)
 
-            df_unique = df_beer_test["beer_style"].unique()
-            list = df_beer_test["beer_style"].tolist()
+            df_unique = df_beer["beer_style"].unique()
+            list = df_beer["beer_style"].tolist()
 
             uniques = pd.Series(df_unique)
             new_list = pd.Series(list)
@@ -56,16 +56,16 @@ def upload_data():
 
             df_class = DataFrame(final_list, columns=["Class"])
 
-            df_merged = pd.concat([df_beer_test, df_class], axis=1)
+            df_beer_test = pd.concat([df_beer, df_class], axis=1)
+            df_beer.drop(["beer_style"], axis=1, inplace=True)
 
         else:
             st.write("ERROR: Please submit correct files.")
 
     # st.write(df_class.head())
-    st.write(df_merged.head())
-    # st.write(final_list)
-    # st.write(len(df_unique))
-    # return df_red_wine, df_beer, df_wine, df_red_wine_test,df_beer_test, df_wine_test
+
+    return df_red_wine, df_beer, df_wine, df_red_wine_test, df_beer_test, df_wine_test
+
 
 def kmedoids():
     kmedoids = KMedoids()
