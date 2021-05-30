@@ -67,22 +67,41 @@ def upload_data():
     return df_red_wine, df_beer, df_wine, df_red_wine_test, df_beer_test, df_wine_test
 
 
-def kmedoids():
-    kmedoids = KMedoids()
-    pass
+def kmedoids(selected_dataset, selected_distance, df_red_wine, df_wine, df_beer):
+    """"""
+    if selected_dataset == "Red Wine Quality":
+        df_medoid = df_red_wine
+        n_cluster = 6
+    elif selected_dataset == "Wine Classification":
+        df_medoid = df_wine
+        n_cluster = 3
+    elif selected_dataset == "Beer reviews":
+        df_medoid = df_beer
+        n_cluster = 104
+    else:
+        st.error("No such data frame slectable")
 
+    if selected_distance == "Euklid":
+        metric = "euklid"
+    elif selected_distance == "Jaccard":
+        metric = "jaccard"
+    elif selected_distance == "Mahalanobis":
+        metric = "mahalanobis"
+    else:
+        st.error("No such distance slectable")
+
+    kmedoids_result = KMedoids(n_cluster, metric, max_iter=300, random_state=None).fit(df_medoid)
+    st.write(kmedoids_result)
+    return kmedoids_result
 
 def dropdown():
     with st.sidebar.beta_expander("Data Processing"):
         distance = ["Euklid", "Jaccard", "Mahalanobis"]
         data_sets = ["Red Wine Quality", "Wine Classification", "Beer reviews"]
-        algo_method = ["PAM", "Alternate"]
-        st.selectbox("What distance do you want to use", distance)
-        st.selectbox("What dataset do you want to use", data_sets)
-        st.selectbox("What method do you want to use", algo_method)
-    with st.sidebar.beta_expander("Data Visualization"):
-        pass
+        selected_distance = st.selectbox("What distance do you want to use", distance)
+        selected_dataset = st.selectbox("What dataset do you want to use", data_sets)
 
+    return selected_dataset, selected_distance
 
 def main():
     st.title("T4-4: Clustering wine data using K-Medoids algorithm")
@@ -90,7 +109,8 @@ def main():
     # Prevent error warning when no data files have been uploaded yet
     try:
         upload_data()
-        dropdown()
+        selected_dataset, selected_distance, selected_method = dropdown()
+        kmedoids(selected_dataset, selected_distance)
 
     except UnboundLocalError:
         st.warning("Upload data files")
