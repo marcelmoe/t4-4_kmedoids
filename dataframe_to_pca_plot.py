@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-def dataframe_to_pca_plot(df, labeled=True):
+def df_to_pca_plot(df, labeled=True):
     """
 
     :param df: Pandas dataframe
@@ -41,7 +41,8 @@ def dataframe_to_pca_plot(df, labeled=True):
                                    'z': transformed_data[:,2], 'cluster': labels})
 
     # Pass arguments to scatter_3d
-    fig = px.scatter_3d(transformed_df, x='PC1', y='PC2', z='PC3', color='cluster', width=800, height=800)
+    fig = px.scatter_3d(transformed_df, x='x', y='y', z='z', color='cluster', width=800,
+                        height=800)
     fig.update_traces(marker=dict(size=5, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
     return fig

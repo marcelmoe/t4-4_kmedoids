@@ -5,6 +5,8 @@ import pandas as pd
 import streamlit as st
 from sklearn_extra.cluster import KMedoids
 from pandas import DataFrame
+import dataframe_to_pca_plot
+
 
 @st.cache(suppress_st_warning=True)
 def upload_data():
@@ -21,17 +23,25 @@ def upload_data():
     for file in range(len(data_files)):
         if data_files[file].name.endswith("red.csv"):
             df_red_wine_test = pd.read_csv(data_files[file], delimiter=";")
-            #drop classificaion colum "quality"
+            # drop classificaion colum "quality"
             df_red_wine = df_red_wine_test.drop(["quality"], axis=1)
 
         elif data_files[file].name.endswith("wine.csv"):
-            #Set up headers for wine data set
+            # set up headers for wine data set
             headers = ["Class","Alcohol", "Malic acid", "Ash", "Alcalinity of ash", "Magnesium",
                        "Total phenols", "Flavanoids", "Nonflavanoid phenols", "Proanthocyanins",
                        "Color intensity", "Hue", "OD280/OD315 of diluted wines", "Proline"]
             df_wine_test = pd.read_csv(data_files[file], header=None, names=headers)
-            #drop classificaion colum "Class"
+            # drop classificaion column "Class"
             df_wine = df_wine_test.drop(["Class"], axis=1)
+
+
+        elif data_files[file].name.endswith("iris.csv"):
+            headers=['sepal length in cm', 'sepal width in cm', 'petal length in cm',
+                     'petal width in cm', 'class']
+            df_iris_test = pd.read_csv(data_files[file], header=None, names=headers)
+            df_iris = df_iris_test.drop(['class'], axis=1)
+
 
         elif data_files[file].name.endswith("shuffled.csv"):
             df_beer = pd.read_csv(data_files[file])
@@ -64,10 +74,10 @@ def upload_data():
 
     # st.write(df_class.head())
 
-    return df_red_wine, df_beer, df_wine, df_red_wine_test, df_beer_test, df_wine_test
+    return df_red_wine, df_iris, df_wine, df_red_wine_test, df_iris_test, df_wine_test
 
 
-def kmedoids(selected_dataset, selected_distance, df_red_wine, df_wine, df_beer):
+def kmedoids(selected_dataset, selected_distance, df_red_wine, df_wine, df_iris):
     """"""
     if selected_dataset == "Red Wine Quality":
         df_medoid = df_red_wine
@@ -75,42 +85,52 @@ def kmedoids(selected_dataset, selected_distance, df_red_wine, df_wine, df_beer)
     elif selected_dataset == "Wine Classification":
         df_medoid = df_wine
         n_cluster = 3
-    elif selected_dataset == "Beer reviews":
-        df_medoid = df_beer
-        n_cluster = 104
+    elif selected_dataset == "Iris flower classification":
+        df_medoid = df_iris
+        n_cluster = 3
     else:
-        st.error("No such data frame slectable")
+        st.error("No such data frame selectable")
 
     if selected_distance == "Euklid":
-        metric = "euklid"
-    elif selected_distance == "Jaccard":
-        metric = "jaccard"
+        metric = "euclidean"
+    elif selected_distance == "chebyshev":
+        metric = "chebyshev"
     elif selected_distance == "Mahalanobis":
         metric = "mahalanobis"
     else:
         st.error("No such distance slectable")
 
-    kmedoids_result = KMedoids(n_cluster, metric, max_iter=300, random_state=None).fit(df_medoid)
-    st.write(kmedoids_result)
-    return kmedoids_result
+    kmedoid_numpy = KMedoids(n_cluster, metric, max_iter=300, random_state=None).fit(df_medoid)
+    kmedoids_result = pd.DataFrame(kmedoid_numpy.labels_, columns=["cluster"])
+    # st.write(kmedoids_result.labels_)
+
+    df_pca = pd.concat([kmedoids_result, df_medoid], axis=1)
+
+    return kmedoids_result, df_pca
+
 
 def dropdown():
     with st.sidebar.beta_expander("Data Processing"):
-        distance = ["Euklid", "Jaccard", "Mahalanobis"]
-        data_sets = ["Red Wine Quality", "Wine Classification", "Beer reviews"]
+        distance = ["Euklid", "Chebyshev", "Mahalanobis"]
+        data_sets = ["Red Wine Quality", "Wine Classification", "Iris flower classification"]
         selected_distance = st.selectbox("What distance do you want to use", distance)
         selected_dataset = st.selectbox("What dataset do you want to use", data_sets)
 
     return selected_dataset, selected_distance
+
 
 def main():
     st.title("T4-4: Clustering wine data using K-Medoids algorithm")
 
     # Prevent error warning when no data files have been uploaded yet
     try:
-        upload_data()
-        selected_dataset, selected_distance, selected_method = dropdown()
-        kmedoids(selected_dataset, selected_distance)
+        df_red_wine, df_iris, df_wine, df_red_wine_test, df_iris_test, df_wine_test = \
+            upload_data()
+        selected_dataset, selected_distance = dropdown()
+        kmedoids_result, df_pca = kmedoids(selected_dataset, selected_distance, df_wine,
+                                         df_red_wine, df_iris)
+        fig = dataframe_to_pca_plot.df_to_pca_plot(df_pca)
+        st.write(fig)
 
     except UnboundLocalError:
         st.warning("Upload data files")
