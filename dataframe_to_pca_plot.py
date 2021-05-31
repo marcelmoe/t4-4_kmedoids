@@ -37,11 +37,14 @@ def df_to_pca_plot(df, labeled=True):
 
     # Construct the figures
     # Build dataframe for plotly.express.scatter_3d
-    transformed_df = pd.DataFrame({'x': transformed_data[:, 0], 'y': transformed_data[:, 1],
-                                   'z': transformed_data[:,2], 'cluster': labels})
+    features = ["PC1 (" + str(round(pca.explained_variance_ratio_[0]*100,2)) +"%)", "PC2 (" +
+                str(round(pca.explained_variance_ratio_[1]*100,2)) +"%)",
+                "PC3 (" + str(round(pca.explained_variance_ratio_[2]*100,2)) +"%)"]
+    transformed_df = pd.DataFrame({features[0]: transformed_data[:, 0], features[1]: transformed_data[:, 1],
+                                   features[2]: transformed_data[:,2], 'cluster': labels})
 
     # Pass arguments to scatter_3d
-    fig = px.scatter_3d(transformed_df, x='x', y='y', z='z', color='cluster', width=800,
+    fig = px.scatter_3d(transformed_df, x=features[0], y=features[1], z=features[2], color='cluster', width=800,
                         height=800)
     fig.update_traces(marker=dict(size=5, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
