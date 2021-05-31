@@ -100,7 +100,7 @@ def kmedoids(selected_dataset, selected_distance, df_red_wine, df_wine, df_iris)
     else:
         st.error("No such distance slectable")
 
-    kmedoid_numpy = KMedoids(n_cluster, metric, max_iter=300, random_state=None).fit(df_medoid)
+    kmedoid_numpy = KMedoids(n_cluster, metric,init='k-medoids++', max_iter=300, random_state=None).fit(df_medoid)
     kmedoids_result = pd.DataFrame(kmedoid_numpy.labels_, columns=["cluster"])
     # st.write(kmedoids_result.labels_)
 
