@@ -31,7 +31,7 @@ def jaccard_index_for_dataframes(df1, df2):
     return jaccard_index
 
 
-def jaccard_index_for_labels(labels_true, labels_pred):
+def jaccard_index(labels_true, labels_pred):
     """
     Jaccard-Index:
     The Jaccard-Index computes the similarity of two sets A and B as follows:
