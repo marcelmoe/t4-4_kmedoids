@@ -29,7 +29,7 @@ def upload_data():
             df_red_wine_test = pd.read_csv(data_files[file], delimiter=";")
             df_red_wine_test["quality"] = df_red_wine_test["quality"] - 3
             df_red_wine_test = pd.concat([df_red_wine_test["quality"], df_red_wine_test.drop(["quality"], axis=1)], axis=1)
-            # drop classificaion colum "quality"
+            # drop classificaion column "quality"
             df_red_wine = df_red_wine_test.drop(["quality"], axis=1)
 
         elif data_files[file].name.endswith("wine.csv"):
@@ -85,7 +85,7 @@ def upload_data():
     return df_red_wine, df_iris, df_wine, df_red_wine_test, df_iris_test, df_wine_test
 
 
-def kmedoids(selected_dataset, selected_distance, df_red_wine, df_wine, df_iris,
+def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
              df_red_wine_test, df_iris_test, df_wine_test):
     """"""
     if selected_dataset == "Red Wine Quality":
