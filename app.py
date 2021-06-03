@@ -87,7 +87,7 @@ def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
         df_medoid = df_wine
         df_medoid_test = df_wine_test
         n_cluster = 3
-    elif selected_dataset == "Iris flower classification":
+    elif selected_dataset == "Iris Flower Classification":
         df_medoid = df_iris
         df_medoid_test = df_iris_test
         n_cluster = 3
@@ -131,7 +131,7 @@ def dropdown():
 
     with st.sidebar.beta_expander("Data Processing"):
         distance = ["Euklid", "Chebyshev", "Mahalanobis"]
-        data_sets = ["Red Wine Quality", "Wine Classification", "Iris flower classification"]
+        data_sets = ["Red Wine Quality", "Wine Classification", "Iris Flower Classification"]
         selected_distance = st.selectbox("What distance do you want to use", distance)
         selected_dataset = st.selectbox("What dataset do you want to use", data_sets)
 
