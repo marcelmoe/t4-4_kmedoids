@@ -2,46 +2,8 @@
 The evaluation module provides several functions to measure clustering quality.
 """
 
-import pandas as pd
 import numpy as np
-from sklearn.metrics import jaccard_score
-
-
-def jaccard_index_for_dataframes(df1, df2):
-    """
-    Jaccard-Index:
-    The Jaccard-Index computes the similarity of two sets A and B as follows:
-    J(A,B) = Intersection(A,B)/Union(A,B).
-    Hint: It is computationally way more efficient to use the jaccard_index_for_labels function
-    :param df1: First Pandas Dataframe. It is assumed that df1 does not contain a class-/cluster-label column.
-    :param df2: Second Pandas Dataframe having the same column types as df1. It is assumed that df2 does not
-    contain a class-/cluster-label column.
-    :return: J(df1, df2)
-    """
-    # Intersection of df1 and df2
-    intersection = pd.merge(df1, df2, how='inner')
-
-    # Union of df1 and df2
-    union = pd.concat([df1, df2])
-    union = union.drop_duplicates()
-
-    # Jaccard_index
-    jaccard_index = len(intersection)/len(union)
-
-    return jaccard_index
-
-
-def jaccard_index(labels_true, labels_pred):
-    """
-    Jaccard-Index:
-    The Jaccard-Index computes the similarity of two sets A and B as follows:
-    J(A,B) = Intersection(A,B)/Union(A,B).
-    :param labels_true: numpy array containing the true labels
-    :param labels_pred: numpy array containing the predicted labels (in the same order)
-    :return: Jaccard-Index. In case of more then two possible classes, the Jaccard-Indexes for each class
-    are returned as a numpy array. Example. array([score_class0, score_class1, score_class2, ..., score_classN])
-    """
-    return jaccard_score(labels_true, labels_pred)
+from sklearn.metrics import rand_score
 
 
 def sum_of_squares(df, cluster_count):
@@ -68,6 +30,10 @@ def sum_of_squares(df, cluster_count):
         result = result + [ssq]
 
     return np.array(result)
+
+
+def rand_index(labels_true, labels_pred):
+    return rand_score(labels_true, labels_pred)
 
 
 def silhouette_coefficient(df, cluster_count):
@@ -153,4 +119,4 @@ def silhouette_coefficient(df, cluster_count):
         # We add the cluster silhouette coefficient to the result list
         result = result + [cluster_sc]
 
-    return result, sum(all_s)/len(all_s)
+    return result
