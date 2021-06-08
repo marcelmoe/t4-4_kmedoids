@@ -8,6 +8,7 @@ base58==2.1.0
 bleach==3.3.0
 blinker==1.4
 cachetools==4.2.2
+cargo==0.3
 certifi==2020.12.5
 cffi==1.14.5
 chardet==4.0.0
