@@ -36,8 +36,7 @@ on the development environment for integration
 ## Installation
 
 ## Use
-After uploading the three respective data sets as .csv files, the user
-
+For a user manual, please refer to the final report PDF also uploaded in this git repository.
 
 ## List of technology used 
 and any links to further information related to this technology
