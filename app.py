@@ -23,7 +23,7 @@ def upload_data():
     """
 
     # Drag & drop multiple excel files
-    data_files = st.file_uploader(type=["csv"],
+    data_files = st.file_uploader("Upload a .csv file", type=["csv"],
                                   accept_multiple_files=True)
 
     # Assign correct data files to data frames
