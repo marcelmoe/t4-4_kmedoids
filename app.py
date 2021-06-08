@@ -104,8 +104,6 @@ def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
     else:
         st.error("No such distance selectable")
 
-    st.write("Hier: ", df_medoid.shape)
-
     # Feed kmedoid with no. of cluster, chosen metric and respective data frame
     # Use random initialisation method, but specify random state of 7 for random no. generator
     kmedoid_numpy_0 = KMedoids(n_cluster, metric[0],init='random', max_iter=300, random_state=7).fit(df_medoid)
