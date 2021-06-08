@@ -38,14 +38,18 @@ def data_clearance():
 
 def data_description(df_red_wine, df_wine, df_iris):
     """
-    prints out respective description of the data frames
+    prints out respective description of the data frames to an Latex format
     :return: None
     """
-    red_describe = df_red_wine.describe()
-    with open('mytable.tex','w') as tf:
+    red_describe = df_red_wine.apply(pd.DataFrame.describe, axis=1)
+    with open('Descriptin_red.tex','w') as tf:
         tf.write(red_describe.to_latex())
-    print(df_wine.describe())
-    print(df_iris.describe())
+    wine_describe = df_wine.apply(pd.DataFrame.describe, axis=1)
+    with open('Description_wine.tex','w') as tf:
+        tf.write(wine_describe.to_latex())
+    iris_describe = df_wine.apply(pd.DataFrame.describe, axis=1)
+    with open('Description_iris.tex','w') as tf:
+        tf.write(iris_describe.to_latex())
 
 def main():
     """
