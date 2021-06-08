@@ -41,9 +41,9 @@ def data_description(df_red_wine, df_wine, df_iris):
     prints out respective description of the data frames
     :return: None
     """
-    print(df_red_wine.describe())
+    red_describe = df_red_wine.describe()
     with open('mytable.tex','w') as tf:
-        tf.write(df_red_wine.to_latex())
+        tf.write(red_describe.to_latex())
     print(df_wine.describe())
     print(df_iris.describe())
 
