@@ -167,7 +167,7 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
         fig = make_subplots(rows=1, cols=1, shared_yaxes=True)
 
         # Sum of squares bar plot; assign axis labels
-        fig.add_trace(go.Bar(x=metric + ["Actual"],
+        fig.add_trace(go.Bar(x=metric + ["actual"],
                              y=[validation_medoid_0,
                                 validation_medoid_1,
                                 validation_medoid_2,

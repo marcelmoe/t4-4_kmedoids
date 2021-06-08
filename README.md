@@ -1,5 +1,5 @@
 # t4-4_kmedoids
-This project is part of the module 'Data Science 1' at Goethe University, Frankfurt, and was developed by group t4-4.
+This project is part of the module 'Data Science 1' at Goethe University, Frankfurt, and was developed by group t4-4 in the summer term of 2021.
 
 ## The project
 Within this project, a data analysis of three classified data sets is performed using three variants of the kmedoids algorithm. The goal is to have the algorithm correctly assign 
