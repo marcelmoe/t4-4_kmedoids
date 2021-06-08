@@ -95,7 +95,7 @@ def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
         st.error("No such data frame selectable")
 
     # Assign respective metric based on user's choice
-    if selected_distance == "Euklid":
+    if selected_distance == "Euclidean":
         metric = ["euclidean", "chebyshev", "mahalanobis"]
     elif selected_distance == "Chebyshev":
         metric = ["chebyshev", "mahalanobis", "euclidean"]
@@ -128,7 +128,7 @@ def dropdown():
     """
 
     with st.sidebar.beta_expander("Data Processing"):
-        distance = ["Euklid", "Chebyshev", "Mahalanobis"]
+        distance = ["Euclidean", "Chebyshev", "Mahalanobis"]
         data_sets = ["Red Wine Quality", "Wine Classification", "Iris Flower Classification"]
         selected_distance = st.selectbox("What distance do you want to use", distance)
         selected_dataset = st.selectbox("What dataset do you want to use", data_sets)
@@ -174,7 +174,7 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
                                 validation_test],
                                 marker=dict(color=["#6a93b0", "#778899", "#008080", "#98b4c8"])))
 
-        fig.update_layout(showlegend=False, title_text="Clustering quality of different distance"
+        fig.update_layout(showlegend=False, title_text="Clustering quality of different distance "
                                                        "measures")
         st.write(fig)
 
