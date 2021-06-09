@@ -54,7 +54,6 @@ def silhouette_coefficient(df, cluster_count):
     """
 
     result = []
-    all_s = []
 
     # Iterate over all clusters
     for i in range(0, cluster_count):
@@ -111,7 +110,6 @@ def silhouette_coefficient(df, cluster_count):
 
             # Adding to list
             s = s + [s_j]
-            all_s = all_s + [s_j]
 
         # Finally, we can compute our cluster's silhouette coefficient
         cluster_sc = sum(s) / len(s)
