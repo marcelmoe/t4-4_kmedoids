@@ -31,7 +31,7 @@ The cluster validation indices eligible are:
 For more information on the project, please refer to the final report PDF.
 
 ## Requirements
-For systgem requirements please refer to the final report PDF.
+For system requirements please refer to the final report PDF.
 
 ## Installation & Use
 For a user manual, please refer to the final report PDF.
