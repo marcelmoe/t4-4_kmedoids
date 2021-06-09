@@ -28,25 +28,16 @@ The cluster validation indices eligible are:
 - Silhouette Coefficient
 
 
-For more information on the project, please read the final report PDF also uploaded in this git repository.
+For more information on the project, please refer to the final report PDF.
 
 ## Requirements
-on the development environment for integration
+For systgem requirements please refer to the final report PDF.
 
-## Installation
-
-## Use
-For a user manual, please refer to the final report PDF also uploaded in this git repository.
+## Installation & Use
+For a user manual, please refer to the final report PDF.
 
 ## List of technology used 
-and any links to further information related to this technology
-
-## Desired collaboration
-Open-source projects that the developers independently modify or expand should be contained in a section on “desired collaboration” in the readme.md file. How should problems be handled? How should developers advance the changes?
-
-
-## Known bugs and any bug fixes
-
-## FAQ section with all previously asked questions
+For a list of the used technology and packages, please refer to the final report PDF.
 
 ## Copyright and licensing information
+&copy; Benedikt Schröter, Mitja Mook, Marcel Möbus
