@@ -1,27 +1,18 @@
-
 import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-def df_to_pca_plot(df, labeled=True):
-    """
 
+def df_to_pca_plot(df):
+    """
     :param df: Pandas dataframe
-    :param labeled: If parameter 'labeled' is not explicitly passed as False, the function assumes that
-            the first column contains the correct classes or the assigned clusters.
     :return:A figure containing a 3D plot corresponding to the dimension reduced dataframe. The dimensionality reduction
             is done using PCA.
     """
-    # Take care for class (and cluster) labels
-    if labeled:
-        # Extract the labels column and copy it to numpy array containing Strings
-        labels = ((df.iloc[:,0]).copy()).astype(str)
-        # Drop the labels column (which is assumed to be the first one)
-        df_copy = df.drop(df.columns[0], axis=1)
-
-    else:
-        # Just copy the dataframe to avoid distortions
-        df_copy = df.copy()
+    # Extract the label column and copy it to numpy array containing Strings
+    labels = df[df.columns[0]].astype(str)
+    # Drop the labels column (which is assumed to be the first one)
+    df_copy = df.drop(df.columns[0], axis=1)
 
     # Prepare dataframe for PCA
     # Centering
@@ -37,11 +28,11 @@ def df_to_pca_plot(df, labeled=True):
 
     # Construct the figures
     # Build dataframe for plotly.express.scatter_3d
-    features = ["PC1 (" + str(round(pca.explained_variance_ratio_[0]*100,2)) +"%)", "PC2 (" +
-                str(round(pca.explained_variance_ratio_[1]*100,2)) +"%)",
-                "PC3 (" + str(round(pca.explained_variance_ratio_[2]*100,2)) +"%)"]
+    features = ["PC1 (" + str(round(pca.explained_variance_ratio_[0] * 100, 2)) + "%)", "PC2 (" +
+                str(round(pca.explained_variance_ratio_[1] * 100, 2)) + "%)",
+                "PC3 (" + str(round(pca.explained_variance_ratio_[2] * 100, 2)) + "%)"]
     transformed_df = pd.DataFrame({features[0]: transformed_data[:, 0], features[1]: transformed_data[:, 1],
-                                   features[2]: transformed_data[:,2], 'cluster': labels})
+                                   features[2]: transformed_data[:, 2], 'cluster': labels})
 
     # Pass arguments to scatter_3d
     fig = px.scatter_3d(transformed_df, x=features[0], y=features[1], z=features[2], color='cluster', width=800,
