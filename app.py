@@ -1,5 +1,5 @@
 """
-This module deploys KMedoid algorithms and result visualizaation using streamlit.
+This module deploys KMedoid algorithms and result visualization using streamlit.
 """
 
 import pandas as pd
@@ -7,15 +7,13 @@ import numpy as np
 import evaluation as eval
 import streamlit as st
 from sklearn_extra.cluster import KMedoids
-from pandas import DataFrame
 import dataframe_to_pca_plot
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
+
 # Cache data to speed up data processing
 @st.cache(suppress_st_warning=True)
-
-
 def upload_data():
     """
     takes raw data and
@@ -49,8 +47,8 @@ def upload_data():
             df_wine = df_wine_test.drop(["Class"], axis=1)
 
         elif data_files[file].name.endswith("iris.csv"):
-            headers=['sepal length in cm', 'sepal width in cm', 'petal length in cm',
-                     'petal width in cm', 'class']
+            headers = ['sepal length in cm', 'sepal width in cm', 'petal length in cm',
+                       'petal width in cm', 'class']
             df_iris_test = pd.read_csv(data_files[file], header=None, names=headers)
             df_iris_test = pd.concat([df_iris_test["class"], df_iris_test.drop(["class"], axis=1)], axis=1)
             df_iris = df_iris_test.drop(['class'], axis=1)
@@ -64,8 +62,8 @@ def upload_data():
 def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
              df_red_wine_test, df_iris_test, df_wine_test):
     """
-    Assign metric and data set based on user's choice, then perform kmedoid.
-    kmedoid is performed for user's choice and for all other possible combinations of metric and
+    Assign metric and data set based on user's choice, then perform kmedoids.
+    kmedoids is performed for user's choice and for all other possible combinations of metric and
     metric to gain comparability later on.
     :param selected_dataset: data set selected by user
     :param selected_distance: distance metric selected by user
@@ -75,7 +73,7 @@ def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
     :param df_red_wine_test: red wine data set with classification column
     :param df_iris_test: iris data set with classification column
     :param df_wine_test: wine quality data set with classification column
-    :return: kmedoid results, data frame for PCA visualisation, no. of clusters, etc.
+    :return: kmedoids results, data frame for PCA visualisation, no. of clusters, etc.
     """
 
     # Assign respective data frames and no. of clusters based on user's choice
@@ -104,11 +102,11 @@ def kmedoids(selected_dataset, selected_distance, df_wine, df_red_wine, df_iris,
     else:
         st.error("No such distance selectable")
 
-    # Feed kmedoid with no. of cluster, chosen metric and respective data frame
+    # Feed kmedoids with no. of cluster, chosen metric and respective data frame
     # Use random initialisation method, but specify random state of 7 for random no. generator
-    kmedoid_numpy_0 = KMedoids(n_cluster, metric[0],init='random', max_iter=300, random_state=7).fit(df_medoid)
-    kmedoid_numpy_1 = KMedoids(n_cluster, metric[1],init='random', max_iter=300, random_state=7).fit(df_medoid)
-    kmedoid_numpy_2 = KMedoids(n_cluster, metric[2],init='random', max_iter=300, random_state=7).fit(df_medoid)
+    kmedoid_numpy_0 = KMedoids(n_cluster, metric[0], init='random', max_iter=300, random_state=7).fit(df_medoid)
+    kmedoid_numpy_1 = KMedoids(n_cluster, metric[1], init='random', max_iter=300, random_state=7).fit(df_medoid)
+    kmedoid_numpy_2 = KMedoids(n_cluster, metric[2], init='random', max_iter=300, random_state=7).fit(df_medoid)
 
     # Assign predicted cluster for all choices to variables
     kmedoids_result_0 = pd.DataFrame(kmedoid_numpy_0.labels_, columns=["cluster"])
@@ -138,7 +136,7 @@ def dropdown():
 
 def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_result_2, metric):
     """
-
+    This module is responsible for generating the validation result illustrations.
     :param df_medoid_test:
     :param df_pca:
     :param n_cluster:
@@ -147,20 +145,19 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
     :param metric:
     :return:
     """
-
     with st.sidebar.beta_expander("Validation"):
         validation_choice = st.radio("Select validation method", ["Sum of Squared Errors", "Rand Index",
-                                                            "Silhouette Coefficient"])
+                                                                  "Silhouette Coefficient"])
 
     # Based on validation chosen by user, perform (eval) and assign validation results
     if validation_choice == "Sum of Squared Errors":
         validation_medoid_0 = round(sum(eval.sum_of_squares(df_pca, n_cluster)))
 
         validation_medoid_1 = round(sum(eval.sum_of_squares(pd.concat(
-            [kmedoids_result_1, df_pca.drop(df_pca.columns[0], axis=1)], axis=1),n_cluster)))
+            [kmedoids_result_1, df_pca.drop(df_pca.columns[0], axis=1)], axis=1), n_cluster)))
 
         validation_medoid_2 = round(sum(eval.sum_of_squares(pd.concat(
-            [kmedoids_result_2, df_pca.drop(df_pca.columns[0], axis=1)], axis=1),n_cluster)))
+            [kmedoids_result_2, df_pca.drop(df_pca.columns[0], axis=1)], axis=1), n_cluster)))
 
         validation_test = round(sum(eval.sum_of_squares(df_medoid_test, n_cluster)))
 
@@ -172,7 +169,7 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
                                 validation_medoid_1,
                                 validation_medoid_2,
                                 validation_test],
-                                marker=dict(color=["#6a93b0", "#778899", "#008080", "#98b4c8"])))
+                             marker=dict(color=["#6a93b0", "#778899", "#008080", "#98b4c8"])))
 
         fig.update_layout(showlegend=False, title_text="Clustering quality of different distance "
                                                        "measures")
@@ -180,11 +177,11 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
 
     elif validation_choice == "Rand Index":
         validation_medoid_0 = round(eval.rand_score(df_medoid_test[df_medoid_test.columns[0]],
-                                                    df_pca[df_pca.columns[0]]),2)*100
+                                                    df_pca[df_pca.columns[0]]), 2) * 100
         validation_medoid_1 = round(eval.rand_score(df_medoid_test[df_medoid_test.columns[0]],
-                                                    kmedoids_result_1["cluster"]),2)*100
+                                                    kmedoids_result_1["cluster"]), 2) * 100
         validation_medoid_2 = round(eval.rand_score(df_medoid_test[df_medoid_test.columns[0]],
-                                                    kmedoids_result_2["cluster"]),2)*100
+                                                    kmedoids_result_2["cluster"]), 2) * 100
 
         labels = ["Matching", "Not Matching"]
 
@@ -194,17 +191,17 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
                                                     {'type': 'domain'}]])
         # Rand index pie/ donut subplots
         fig.add_trace(go.Pie(labels=labels,
-                             values=[validation_medoid_0, 100-validation_medoid_0],
+                             values=[validation_medoid_0, 100 - validation_medoid_0],
                              name=metric[0],
                              title=metric[0]), 1, 1)
 
         fig.add_trace(go.Pie(labels=labels,
-                             values=[validation_medoid_1, 100-validation_medoid_1],
+                             values=[validation_medoid_1, 100 - validation_medoid_1],
                              name=metric[1],
                              title=metric[1]), 1, 2)
 
         fig.add_trace(go.Pie(labels=labels,
-                             values=[validation_medoid_2, 100-validation_medoid_2],
+                             values=[validation_medoid_2, 100 - validation_medoid_2],
                              name=metric[2],
                              title=metric[2]), 1, 3)
 
@@ -218,7 +215,7 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
 
         validation_medoid_0 = eval.silhouette_coefficient(df_pca, n_cluster)
         df = pd.DataFrame({'Quality': validation_medoid_0,
-                           'Cluster': list(range(0,n_cluster,1))
+                           'Cluster': list(range(0, n_cluster, 1))
                            })
 
         # Add column with colors
@@ -232,19 +229,19 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
                              marker_color=df['Color']))
 
         fig.update_layout(barmode='stack',
-                          title_text="Silhouette Coefficient: "+metric[0],
+                          title_text="Silhouette Coefficient: " + metric[0],
                           xaxis_title="Clusters",
                           yaxis_title="Quality")
 
         # Avoid sub steps of x-axis by defining tick no.
-        fig.update_xaxes(nticks=n_cluster+1)
+        fig.update_xaxes(nticks=n_cluster + 1)
         st.write(fig)
 
         validation_medoid_1 = eval.silhouette_coefficient(pd.concat(
             [kmedoids_result_1, df_pca.drop(df_pca.columns[0], axis=1)], axis=1), n_cluster)
 
         df = pd.DataFrame({'Quality': validation_medoid_1,
-                           'Cluster': list(range(0,n_cluster,1))})
+                           'Cluster': list(range(0, n_cluster, 1))})
 
         # Add column with colors
         df["Color"] = np.where(df["Quality"] < 0, 'red', 'green')
@@ -258,18 +255,18 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
                    marker_color=df['Color']))
 
         fig.update_layout(barmode='stack',
-                          title_text="Silhouette Coefficient: "+metric[1],
+                          title_text="Silhouette Coefficient: " + metric[1],
                           xaxis_title="Clusters",
                           yaxis_title="Quality")
 
-        fig.update_xaxes(nticks=n_cluster+1)
+        fig.update_xaxes(nticks=n_cluster + 1)
         st.write(fig)
 
         validation_medoid_2 = eval.silhouette_coefficient(pd.concat(
             [kmedoids_result_2, df_pca.drop(df_pca.columns[0], axis=1)], axis=1), n_cluster)
 
         df = pd.DataFrame({'Quality': validation_medoid_2,
-                           'Cluster': list(range(0,n_cluster,1))})
+                           'Cluster': list(range(0, n_cluster, 1))})
 
         # Add column with colors
         df["Color"] = np.where(df["Quality"] < 0, 'red', 'green')
@@ -283,11 +280,11 @@ def df_diagram(df_medoid_test, df_pca, n_cluster, kmedoids_result_1, kmedoids_re
                    marker_color=df['Color']))
 
         fig.update_layout(barmode='stack',
-                          title_text="Silhouette Coefficient: "+metric[2],
+                          title_text="Silhouette Coefficient: " + metric[2],
                           xaxis_title="Clusters",
                           yaxis_title="Quality")
 
-        fig.update_xaxes(nticks=n_cluster+1)
+        fig.update_xaxes(nticks=n_cluster + 1)
         st.write(fig)
 
     else:
