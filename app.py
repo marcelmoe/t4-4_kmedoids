@@ -296,7 +296,7 @@ def main():
     Initialise all functions
     :return:
     """
-    st.title("T4-4: Clustering wine and iris flower data using K-Medoids algorithm")
+    st.title("T4-4: Clustering wine and iris flower data using k-Medoids algorithm")
 
     # Prevent error warning when no data files have been uploaded yet
     try:
